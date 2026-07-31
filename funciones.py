@@ -67,15 +67,18 @@ def buscar_contacto():
             contacto = archivo.readlines()
             encontrado = False
             for c in contacto:
-
-                print(f"Contacto(s) encontrado(s)")
-                print("-------------------------------------------------------------")
-                print("Nombre\t Teléfono\t Correo")
-                print("-------------------------------------------------------------")
-                encontrado = True
                 nombre, telefono, correo = c.strip().split(",")
-                encontrado = True
                 if nombre == nombre_buscar:
+                    if not encontrado:
+                        print("Contacto(s) encontrado(s)")
+                        print(
+                            "-------------------------------------------------------------"
+                        )
+                        print("Nombre\t Teléfono\t Correo")
+                        print(
+                            "-------------------------------------------------------------"
+                        )
+                    encontrado = True
                     print(f"{nombre}\t {telefono}\t {correo}\n")
             if not encontrado:
                 print("El contacto no se encuentra en la agenda.\n")
