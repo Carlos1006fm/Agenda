@@ -2,6 +2,7 @@ def añadir_contacto():
     nombre = input("Ingrese el nombre del contacto: ")
     telefono = input("Ingrese el número de teléfono del contacto: ")
     correo = input("Ingrese el correo electrónico del contacto: ")
+    existe_nombre = False
 
     if not nombre or not telefono or not correo:
         print("Error: Todos los campos son obligatorios.")
@@ -13,11 +14,21 @@ def añadir_contacto():
         print("Error: El correo no es válido.")
 
     else:
-        with open("contactos.txt", "a", encoding="utf-8") as archivo:
-            archivo.write(f"{nombre},{telefono},{correo}\n")
+        with open("contactos.txt", "r", encoding="utf-8") as archivo:
+            contactos = archivo.readlines()
+            for contacto in contactos:
+                nombre_existente, telefono, correo = contacto.strip().split(",")
+                if nombre_existente == nombre:
+                    existe_nombre = True
+                    break
 
-    return "Contacto añadido exitosamente."
-
+        if not existe_nombre:
+            with open("contactos.txt", "a", encoding="utf-8") as archivo:
+                archivo.write(f"{nombre},{telefono},{correo}\n")
+            print("Contacto añadido exitosamente.")
+        else:
+            print("Error: El contacto ya existe en la agenda.")
+            
 
 def ver_contactos():
     try:
