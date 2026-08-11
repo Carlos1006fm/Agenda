@@ -1,6 +1,7 @@
 import tkinter as tk
 from tkinter import messagebox
 from funciones import Agenda
+import botones
 
 agenda = Agenda()
 
@@ -35,17 +36,19 @@ titulo = tk.Label(ventana, text="Agenda de Contactos", font=("Arial", 20))
 
 titulo.pack(pady=20)
 
-boton_ver = tk.Button(
-    ventana, text="Ver contactos", width=20, command=agenda.ver_contactos
-)
+boton_ver = tk.Button(ventana, text="Contactos", width=20, command=agenda.ver_contactos)
 
 boton_ver.pack(pady=5)
 
-boton_añadir = tk.Button(ventana, text="Añadir contacto", width=20)
+boton_añadir = tk.Button(
+    ventana, text="Añadir contacto", width=20, command=botones.ventana_añadir
+)
 
 boton_añadir.pack(pady=5)
 
-boton_eliminar = tk.Button(ventana, text="Eliminar contacto", width=20)
+boton_eliminar = tk.Button(
+    ventana, text="Eliminar contacto", width=20, command=botones.ventana_eliminar
+)
 
 boton_eliminar.pack(pady=5)
 

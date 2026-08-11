@@ -6,89 +6,92 @@ class Agenda:
     def __init__(self):
         self.contactos = "contactos.txt"
 
-    def añadir_contacto(self):
-        nombre = input("Ingrese el nombre del contacto: ")
-        telefono = input("Ingrese el número de teléfono del contacto: ")
-        correo = input("Ingrese el correo electrónico del contacto: ")
+    def añadir_contacto(self, nombre, telefono, correo):
         existe_nombre = False
 
         if not nombre or not telefono or not correo:
-            print("Error: Todos los campos son obligatorios.")
+            return False, "Todos los campos son obligatorios."
 
         elif not telefono.isdigit() or len(telefono) != 9:
-            print("Error: El teléfono debe contener 9 dígitos.")
+            return False, "El teléfono debe contener 9 dígitos numericos."
 
         elif "@" not in correo or "." not in correo:
-            print("Error: El correo no es válido.")
+            return False, "El correo no es válido."
 
         else:
             with open(self.contactos, "r", encoding="utf-8") as archivo:
                 contactos = archivo.readlines()
                 for contacto in contactos:
-                    nombre_existente, telefono, correo = contacto.strip().split(",")
-                    if nombre_existente == nombre:
+                    nombre_existente, telefono_existente, correo_existente = (
+                        contacto.strip().split(",")
+                    )
+
+                    if (
+                        nombre_existente == nombre
+                        and telefono_existente == telefono
+                        and correo_existente == correo
+                    ):
                         existe_nombre = True
                         break
 
-            if not existe_nombre:
-                with open(self.contactos, "a", encoding="utf-8") as archivo:
-                    archivo.write(f"{nombre},{telefono},{correo}\n")
-                print("Contacto añadido exitosamente.")
-            else:
-                print("Error: El contacto ya existe en la agenda.")
+            if existe_nombre:
+                return False, "El contacto ya existe en la agenda."
 
-    """
+            with open(self.contactos, "a", encoding="utf-8") as archivo:
+                archivo.write(f"{nombre},{telefono},{correo}\n")
+
+            return True, "Contacto añadido exitosamente."
+
     def ver_contactos(self):
+        ventana_contactos = tk.Toplevel()
+        ventana_contactos.title("Contactos")
+        ventana_contactos.geometry("600x400")
+
+        marco = tk.Frame(ventana_contactos)
+        marco.pack(pady=10)
+
+        def actualizar():
+            # Eliminar los widgets anteriores
+            for widget in marco.winfo_children():
+                widget.destroy()
+
             try:
-                with open(self.contactos, "r") as archivo:
+                with open(self.contactos, "r", encoding="utf-8") as archivo:
                     contactos = archivo.readlines()
-                    if contactos:
-                        print("Lista de contactos:")
-                        print(
-                            "-------------------------------------------------------------"
-                        )
-                        print("Nombre\t Teléfono\t Correo")
-                        print(
-                            "-------------------------------------------------------------"
-                        )
-                        for contacto in contactos:
-                            nombre, telefono, correo = contacto.strip().split(",")
-                            print(f"{nombre}\t {telefono}\t {correo}\n")
-                    else:
-                        print("No hay contactos en la agenda.\n")
-            except FileNotFoundError:
-                print("No se encontró el archivo de contactos.")
-    """
 
-    def ver_contactos(self):
-        try:
-            with open(self.contactos, "r", encoding="utf-8") as archivo:
-                contactos = archivo.readlines()
+                if contactos:
 
-            ventana_contactos = tk.Toplevel()
-            ventana_contactos.title("Contactos")
-            ventana_contactos.geometry("600x400")
-
-            if contactos:
-                for contacto in contactos:
-                    nombre, telefono, correo = contacto.strip().split(",")
-
-                    texto = f"{nombre}    {telefono}    {correo}"
-
-                    tk.Label(ventana_contactos, text=texto, font=("Arial", 12)).pack(
-                        pady=5
+                    texto_titulo = (
+                        "Lista de contactos\n"
+                        "-------------------------------------------------------------\n"
+                        "Nombre       Teléfono       Correo\n"
+                        "-------------------------------------------------------------"
                     )
 
-            else:
-                tk.Label(ventana_contactos, text="No hay contactos en la agenda.").pack(
-                    pady=20
-                )
+                    tk.Label(marco, text=texto_titulo, font=("Arial", 12)).pack(pady=5)
 
-        except FileNotFoundError:
-            messagebox.showerror("Error", "No se encontró el archivo de contactos.")
+                    for contacto in contactos:
+                        nombre, telefono, correo = contacto.strip().split(",")
 
-    def eliminar_contacto(self):
-        nombre_eliminar = input("Ingrese el nombre del contacto a eliminar: ")
+                        texto = f"{nombre}       {telefono}       {correo}"
+
+                        tk.Label(marco, text=texto, font=("Arial", 12)).pack(pady=5)
+
+                else:
+                    tk.Label(
+                        marco, text="No hay contactos en la agenda.", font=("Arial", 12)
+                    ).pack(pady=20)
+
+            except FileNotFoundError:
+                messagebox.showerror("Error", "No se encontró el archivo de contactos.")
+
+        actualizar()
+
+        tk.Button(ventana_contactos, text="Actualizar", command=actualizar).pack(
+            pady=10
+        )
+
+    def eliminar_contacto(self, nombre_eliminar, telefono_eliminar):
         try:
             with open(self.contactos, "r") as archivo:
                 contactos = archivo.readlines()
@@ -97,17 +100,17 @@ class Agenda:
                 encontrado = False
                 for contacto in contactos:
                     nombre, telefono, correo = contacto.strip().split(",")
-                    if nombre != nombre_eliminar:
+                    if nombre != nombre_eliminar and telefono != telefono_eliminar:
                         archivo.write(contacto)
                     else:
                         encontrado = True
 
             if encontrado:
-                print("Contacto eliminado exitosamente.\n")
+                return True, "Contacto eliminado exitosamente."
             else:
-                print("No se encontró el contacto especificado.")
+                return False, "El contacto no se encuentra en la agenda."
         except FileNotFoundError:
-            print("No se encontró el archivo de contactos.")
+            messagebox.showerror("Error", "No se encontró el archivo de contactos.")
 
     def buscar_contacto(self):
         nombre_buscar = input("Ingrese el nombre del contacto a buscar: ")
