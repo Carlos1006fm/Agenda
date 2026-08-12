@@ -92,6 +92,7 @@ class Agenda:
         )
 
     def eliminar_contacto(self, nombre_eliminar, telefono_eliminar):
+        lista_contactos = []
         try:
             with open(self.contactos, "r") as archivo:
                 contactos = archivo.readlines()
@@ -101,10 +102,10 @@ class Agenda:
                 for contacto in contactos:
                     nombre, telefono, correo = contacto.strip().split(",")
                     if nombre != nombre_eliminar and telefono != telefono_eliminar:
-                        archivo.write(contacto)
+                        lista_contactos.append(contacto)
                     else:
                         encontrado = True
-
+                archivo.writelines(lista_contactos)
             if encontrado:
                 return True, "Contacto eliminado exitosamente."
             else:
@@ -112,27 +113,23 @@ class Agenda:
         except FileNotFoundError:
             messagebox.showerror("Error", "No se encontró el archivo de contactos.")
 
-    def buscar_contacto(self):
-        nombre_buscar = input("Ingrese el nombre del contacto a buscar: ")
+    def buscar_contacto(self, nombre_buscar):
         try:
             with open(self.contactos, "r") as archivo:
                 contacto = archivo.readlines()
-                encontrado = False
+                encontrado = []
                 for c in contacto:
                     nombre, telefono, correo = c.strip().split(",")
                     if nombre == nombre_buscar:
-                        if not encontrado:
-                            print("Contacto(s) encontrado(s)")
-                            print(
-                                "-------------------------------------------------------------"
-                            )
-                            print("Nombre\t Teléfono\t Correo")
-                            print(
-                                "-------------------------------------------------------------"
-                            )
-                        encontrado = True
-                        print(f"{nombre}\t {telefono}\t {correo}\n")
-                if not encontrado:
-                    print("El contacto no se encuentra en la agenda.\n")
+                        encontrado.append((nombre, telefono, correo))
+                return encontrado
         except FileNotFoundError:
-            print("No se encontró el archivo de contactos.")
+            return "No se encontró el archivo de contactos."
+
+    def mostrar_contactos(self):
+        try:
+            with open(self.contactos, "r") as archivo:
+                contactos = archivo.readlines()
+                return contactos
+        except FileNotFoundError:
+            return "No se encontró el archivo de contactos."

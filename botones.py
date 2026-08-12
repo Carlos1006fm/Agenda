@@ -71,3 +71,62 @@ def ventana_eliminar():
             messagebox.showerror("Error", mensaje)
 
     tk.Button(ventana_eliminar, text="Eliminar", command=boton_eliminar).pack(pady=20)
+
+
+def ventana_buscar():
+    ventana_buscar = tk.Toplevel()
+    ventana_buscar.title("Buscar contacto")
+    ventana_buscar.geometry("400x200")
+
+    tk.Label(ventana_buscar, text="Nombre del contacto a buscar:").pack(pady=5)
+
+    entrada_nombre = tk.Entry(ventana_buscar)
+    entrada_nombre.pack(pady=5)
+
+    def boton_buscar():
+        nombre = entrada_nombre.get()
+
+        resultado = agenda.buscar_contacto(nombre)
+
+        if resultado:
+            ventana_resultados = tk.Toplevel(ventana_buscar)
+            ventana_resultados.title("Resultados de búsqueda")
+            ventana_resultados.geometry("600x400")
+
+            tk.Label(
+                ventana_resultados,
+                text="Contactos encontrados",
+                font=("Arial", 14, "bold"),
+            ).pack(pady=10)
+
+            marco = tk.Frame(ventana_resultados)
+            marco.pack(pady=10)
+
+            # Encabezados
+            tk.Label(marco, text="Nombre", font=("Arial", 12, "bold")).grid(
+                row=0, column=0, padx=20, pady=10
+            )
+
+            tk.Label(marco, text="Teléfono", font=("Arial", 12, "bold")).grid(
+                row=0, column=1, padx=20, pady=10
+            )
+
+            tk.Label(marco, text="Correo", font=("Arial", 12, "bold")).grid(
+                row=0, column=2, padx=20, pady=10
+            )
+            # Resultados
+            for fila, contacto in enumerate(resultado, start=1):
+
+                nombre, telefono, correo = contacto
+
+                tk.Label(marco, text=nombre).grid(row=fila, column=0, padx=20, pady=5)
+
+                tk.Label(marco, text=telefono).grid(row=fila, column=1, padx=20, pady=5)
+
+                tk.Label(marco, text=correo).grid(row=fila, column=2, padx=20, pady=5)
+
+        else:
+
+            messagebox.showerror("Error", "El contacto no se encuentra en la agenda.")
+
+    tk.Button(ventana_buscar, text="Buscar", command=boton_buscar).pack(pady=20)
