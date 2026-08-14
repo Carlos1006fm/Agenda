@@ -7,35 +7,37 @@ agenda = Agenda()
 
 ventana = tk.Tk()
 ventana.title("Agenda de contactos")
-ventana.geometry("600x400")
-ventana.configure(bg="gray")
+ventana.geometry("550x500")
 
-titulo = tk.Label(
-    ventana, text="Agenda de Contactos", font=("Arial", 20), bg="gray", fg="white"
-)
+
+titulo = tk.Label(ventana, text="AGENDA DE CONTACTOS 📒", font=("Arial", 15))
 
 titulo.pack(pady=20)
 
-boton_ver = tk.Button(ventana, text="Contactos", width=20, command=agenda.ver_contactos)
+marco_contactos = tk.Frame(ventana)
+marco_contactos.pack(pady=20)
 
-boton_ver.pack(pady=5)
+boton = tk.Frame(ventana)
+boton.pack(pady=20)
 
 boton_añadir = tk.Button(
-    ventana, text="Añadir contacto", width=20, command=botones.ventana_añadir
-)
-
-boton_añadir.pack(pady=5)
+    boton,
+    text="Añadir contacto",
+    width=15,
+    command=lambda: botones.ventana_añadir(marco_contactos),
+).pack(side="left", padx=5)
 
 boton_eliminar = tk.Button(
-    ventana, text="Eliminar contacto", width=20, command=botones.ventana_eliminar
-)
-
-boton_eliminar.pack(pady=5)
+    boton,
+    text="Eliminar contacto",
+    width=15,
+    command=lambda: botones.ventana_eliminar(marco_contactos),
+).pack(side="left", padx=5)
 
 boton_buscar = tk.Button(
-    ventana, text="Buscar contacto", width=20, command=botones.ventana_buscar
-)
+    boton, text="Buscar contacto", width=15, command=botones.ventana_buscar
+).pack(side="left", padx=5)
 
-boton_buscar.pack(pady=5)
+botones.mostrar_contactos(agenda, marco_contactos)
 
 ventana.mainloop()

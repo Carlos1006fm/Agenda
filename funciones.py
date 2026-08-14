@@ -41,8 +41,6 @@ class Agenda:
                 archivo.write(f"{nombre},{telefono},{correo}\n")
 
             return True, "Contacto añadido exitosamente."
-
-    def ver_contactos(self):
         ventana_contactos = tk.Toplevel()
         ventana_contactos.title("Contactos")
         ventana_contactos.geometry("600x400")
@@ -123,13 +121,5 @@ class Agenda:
                     if nombre == nombre_buscar:
                         encontrado.append((nombre, telefono, correo))
                 return encontrado
-        except FileNotFoundError:
-            return "No se encontró el archivo de contactos."
-
-    def mostrar_contactos(self):
-        try:
-            with open(self.contactos, "r") as archivo:
-                contactos = archivo.readlines()
-                return contactos
         except FileNotFoundError:
             return "No se encontró el archivo de contactos."

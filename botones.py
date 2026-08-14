@@ -6,7 +6,7 @@ from funciones import Agenda
 agenda = Agenda()
 
 
-def ventana_añadir():
+def ventana_añadir(marco_contactos):
 
     ventana_añadir = tk.Toplevel()
     ventana_añadir.title("Añadir contacto")
@@ -36,6 +36,7 @@ def ventana_añadir():
 
         if correcto:
             messagebox.showinfo("Éxito", mensaje)
+            mostrar_contactos(agenda, marco_contactos)
             ventana_añadir.destroy()
         else:
             messagebox.showerror("Error", mensaje)
@@ -43,7 +44,7 @@ def ventana_añadir():
     tk.Button(ventana_añadir, text="Guardar", command=boton_guardar).pack(pady=20)
 
 
-def ventana_eliminar():
+def ventana_eliminar(marco_contactos):
     ventana_eliminar = tk.Toplevel()
     ventana_eliminar.title("Eliminar contacto")
     ventana_eliminar.geometry("400x200")
@@ -66,6 +67,7 @@ def ventana_eliminar():
 
         if correcto:
             messagebox.showinfo("Éxito", mensaje)
+            mostrar_contactos(agenda, marco_contactos)
             ventana_eliminar.destroy()
         else:
             messagebox.showerror("Error", mensaje)
@@ -130,3 +132,69 @@ def ventana_buscar():
             messagebox.showerror("Error", "El contacto no se encuentra en la agenda.")
 
     tk.Button(ventana_buscar, text="Buscar", command=boton_buscar).pack(pady=20)
+
+
+def mostrar_contactos(agenda, marco_contactos):
+
+    # Limpiar los contactos que ya estaban mostrados
+    for widget in marco_contactos.winfo_children():
+        widget.destroy()
+
+    # Configurar las 3 columnas del marco principal con el mismo "uniform"
+    marco_contactos.columnconfigure(0, weight=1, uniform="col")
+    marco_contactos.columnconfigure(1, weight=1, uniform="col")
+    marco_contactos.columnconfigure(2, weight=1, uniform="col")
+
+    try:
+        with open(agenda.contactos, "r", encoding="utf-8") as archivo:
+            contactos = archivo.readlines()
+
+        if contactos:
+
+            # Títulos
+            tk.Label(marco_contactos, text="Nombre", font=("Arial", 12, "bold")).grid(
+                row=0, column=0, padx=20, pady=20
+            )
+            tk.Label(marco_contactos, text="Teléfono", font=("Arial", 12, "bold")).grid(
+                row=0, column=1, padx=20, pady=20
+            )
+            tk.Label(marco_contactos, text="Correo", font=("Arial", 12, "bold")).grid(
+                row=0, column=2, padx=20, pady=20
+            )
+
+            tk.Label(
+                marco_contactos, text="──────────────────────────────────────────"
+            ).grid(row=1, column=0, columnspan=3, pady=5)
+
+            # Contactos
+            for fila, contacto in enumerate(contactos, start=2):
+
+                nombre, telefono, correo = contacto.strip().split(",")
+
+                marco_contacto = tk.Frame(marco_contactos, bd=1, relief="solid")
+                marco_contacto.grid(
+                    row=fila, column=0, columnspan=3, pady=5, sticky="ew"
+                )
+
+                # MISMO uniform que el marco_contactos -> mismas columnas exactas
+                marco_contacto.columnconfigure(0, weight=1, uniform="col")
+                marco_contacto.columnconfigure(1, weight=1, uniform="col")
+                marco_contacto.columnconfigure(2, weight=1, uniform="col")
+
+                tk.Label(marco_contacto, text=nombre, font=("Arial", 10)).grid(
+                    row=0, column=0, padx=20, pady=10
+                )
+                tk.Label(marco_contacto, text=telefono, font=("Arial", 10)).grid(
+                    row=0, column=1, padx=20, pady=10
+                )
+                tk.Label(marco_contacto, text=correo, font=("Arial", 10)).grid(
+                    row=0, column=2, padx=20, pady=10
+                )
+
+        else:
+            tk.Label(marco_contactos, text="No hay contactos en la agenda.").pack(
+                pady=20
+            )
+
+    except FileNotFoundError:
+        tk.Label(marco_contactos, text="No hay contactos en la agenda.").pack(pady=20)
