@@ -140,6 +140,40 @@ def mostrar_contactos(agenda, marco_contactos):
     for widget in marco_contactos.winfo_children():
         widget.destroy()
 
+    # Canvas
+    canvas = tk.Canvas(marco_contactos)
+
+    canvas.pack(side="left", fill="both", expand=True)
+
+    # Scrollbar
+    scrollbar = tk.Scrollbar(
+        marco_contactos,
+        orient="vertical",
+        command=canvas.yview
+    )
+
+    scrollbar.pack(side="right", fill="y")
+
+    # Conectar scrollbar con canvas
+    canvas.configure(yscrollcommand=scrollbar.set)
+
+    # Frame donde estarán TODOS los contactos
+    contenido = tk.Frame(canvas)
+
+    canvas.create_window(
+        (0, 0),
+        window=contenido,
+        anchor="nw"
+    )
+
+    # Actualizar el tamaño del área desplazable
+    def actualizar_scroll(event):
+        canvas.configure(
+            scrollregion=canvas.bbox("all")
+        )
+
+    contenido.bind("<Configure>", actualizar_scroll)
+
     # Configurar las 3 columnas del marco principal con el mismo "uniform"
     marco_contactos.columnconfigure(0, weight=1, uniform="col")
     marco_contactos.columnconfigure(1, weight=1, uniform="col")
