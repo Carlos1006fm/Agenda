@@ -7,7 +7,7 @@ agenda = Agenda()
 
 ventana = tk.Tk()
 ventana.title("Agenda de contactos")
-ventana.geometry("600x500")
+ventana.geometry("675x550")
 
 
 titulo = tk.Label(ventana, text="AGENDA DE CONTACTOS 📒", font=("Arial", 15))

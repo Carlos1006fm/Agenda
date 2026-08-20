@@ -85,3 +85,49 @@ class Agenda:
                 return encontrado
         except FileNotFoundError:
             return "No se encontró el archivo de contactos."
+
+    def editar_contacto(
+        self,
+        nombre_antiguo,
+        telefono_antiguo,
+        correo_antiguo,
+        nombre_nuevo,
+        telefono_nuevo,
+        correo_nuevo,
+    ):
+
+        existe_contacto = False
+
+        if not nombre_nuevo or not telefono_nuevo or not correo_nuevo:
+            return False, "Todos los campos son obligatorios."
+
+        elif not telefono_nuevo.isdigit() or len(telefono_nuevo) != 9:
+            return False, "El teléfono debe contener 9 dígitos numericos."
+
+        elif "@" not in correo_nuevo or "." not in correo_nuevo:
+            return False, "El correo no es válido."
+        else:
+            with open(self.contactos, "r", encoding="utf-8") as archivo:
+                contactos = archivo.readlines()
+            for i, contacto in enumerate(contactos):
+                nombre_existente, telefono_existente, correo_existente = (
+                    contacto.strip().split(",")
+                )
+
+                if (
+                    nombre_existente == nombre_antiguo
+                    and telefono_existente == telefono_antiguo
+                    and correo_existente == correo_antiguo
+                ):
+                    # Sustituirlo por los nuevos datos
+                    contactos[i] = f"{nombre_nuevo},{telefono_nuevo},{correo_nuevo}\n"
+                    existe_contacto = False
+                    break
+
+            if existe_contacto:
+                return False, "El contacto ya existe en la agenda."
+
+            with open(self.contactos, "w", encoding="utf-8") as archivo:
+                archivo.writelines(contactos)
+
+            return True, "Contacto sea editado de forma correcta."
