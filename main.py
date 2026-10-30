@@ -1,22 +1,53 @@
 import tkinter as tk
-from tkinter import messagebox
 from funciones import Agenda
 import botones
+import barra_lateral
 
 agenda = Agenda()
 
+# Colores
+FONDO = "#F5F7FA"
+
+# Crear ventana
 ventana = tk.Tk()
 ventana.title("Agenda de contactos")
-ventana.geometry("675x550")
+ventana.geometry("1000x650")
+ventana.minsize(800, 500)
 
+# Panel principal
+contenido = tk.Frame(ventana, bg=FONDO)
 
-titulo = tk.Label(ventana, text="AGENDA DE CONTACTOS 📒", font=("Arial", 15))
-
+# Titulo
+titulo = tk.Label(
+    contenido,
+    text="AGENDA DE CONTACTOS 📒",
+    bg=FONDO,
+    font=("Arial", 20, "bold"),
+    fg="#172B4D",
+)
 titulo.pack(pady=20)
 
-marco_contactos = tk.Frame(ventana)
+# Zona donde se muestran los contactos
+marco_contactos = tk.Frame(contenido, bg=FONDO)
 marco_contactos.pack(pady=20, fill="both", expand=True)
 
-botones.mostrar_contactos(agenda, marco_contactos)
+
+# Funciones de navegación
+def ir_contactos():
+    botones.mostrar_contactos(agenda, marco_contactos)
+
+
+def ir_favoritos():
+    botones.mostrar_favoritos(agenda, marco_contactos)
+
+
+# Creacion de la barra lateral
+barra = barra_lateral.BarraLateral(ventana, ir_contactos, ir_favoritos)
+
+# Empaquetar después el contenido principal
+contenido.pack(side="left", fill="both", expand=True)
+
+# Mostrar contactos inicialmente
+ir_contactos()
 
 ventana.mainloop()

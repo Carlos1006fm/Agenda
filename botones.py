@@ -203,7 +203,7 @@ def mostrar_contactos(agenda, marco_contactos):
         widget.destroy()
 
     # Canvas (se crea ya, pero se empaqueta más abajo)
-    canvas = tk.Canvas(marco_contactos)
+    canvas = tk.Canvas(marco_contactos, bg="#F5F7FA", highlightthickness=0)
 
     # Scrollbar: se empaqueta PRIMERO para reservar su espacio a la derecha
     # antes de que los títulos o el canvas calculen su propio ancho.
@@ -230,7 +230,7 @@ def mostrar_contactos(agenda, marco_contactos):
     )
 
     # Frame donde estarán TODOS los contactos
-    contenido = tk.Frame(canvas)
+    contenido = tk.Frame(canvas, bg="#F5F7FA")
 
     ventana_canvas = canvas.create_window((0, 0), window=contenido, anchor="nw")
 
@@ -302,7 +302,7 @@ def mostrar_contactos(agenda, marco_contactos):
             # Marco del contacto
             # ------------------------------------------
 
-            marco_contacto = tk.Frame(contenido)
+            marco_contacto = tk.Frame(contenido, bg="#F5F7FA")
 
             marco_contacto.grid(row=fila, column=0, columnspan=4, pady=5, sticky="ew")
 
@@ -316,17 +316,17 @@ def mostrar_contactos(agenda, marco_contactos):
             # Nombre
             # ------------------------------------------
 
-            tk.Label(marco_contacto, text=nombre, font=("Arial", 10)).grid(
-                row=0, column=0, padx=20, pady=10, sticky="ew"
-            )
+            tk.Label(
+                marco_contacto, text=nombre, font=("Arial", 10), bg="#F5F7FA"
+            ).grid(row=0, column=0, padx=20, pady=10, sticky="ew")
 
             # ------------------------------------------
             # Teléfono
             # ------------------------------------------
 
-            tk.Label(marco_contacto, text=telefono, font=("Arial", 10)).grid(
-                row=0, column=1, padx=20, pady=10, sticky="ew"
-            )
+            tk.Label(
+                marco_contacto, text=telefono, font=("Arial", 10), bg="#F5F7FA"
+            ).grid(row=0, column=1, padx=20, pady=10, sticky="ew")
 
             # ------------------------------------------
             # Correo
@@ -337,6 +337,7 @@ def mostrar_contactos(agenda, marco_contactos):
                 text=correo,
                 font=("Arial", 10),
                 justify="center",
+                bg="#F5F7FA",
             )
             label_correo.grid(row=0, column=2, padx=20, pady=10, sticky="ew")
 
@@ -362,6 +363,7 @@ def mostrar_contactos(agenda, marco_contactos):
                 marco_contacto,
                 text="Editar",
                 width=10,
+                bg="#F5F7FA",
                 command=lambda n=nombre, t=telefono, c=correo: ventana_editar(
                     n, t, c, marco_contactos
                 ),
@@ -384,7 +386,7 @@ def mostrar_contactos(agenda, marco_contactos):
 
 def crear_marco_titulos(contenedor):
     # Marco de los títulos (sin padx en el pack -> mismo punto de partida que el canvas)
-    marco_titulos = tk.Frame(contenedor)
+    marco_titulos = tk.Frame(contenedor, bg="#2878E8")
 
     marco_titulos.pack(side="top", fill="x")
 
@@ -393,35 +395,43 @@ def crear_marco_titulos(contenedor):
         marco_titulos.columnconfigure(i, weight=1, uniform="col")
 
     # Títulos (mismo padx=20 que las columnas de datos, para que quede exacto)
-    tk.Label(marco_titulos, text="Nombre", font=("Arial", 12, "bold")).grid(
-        row=0, column=0, padx=20, pady=10, sticky="ew"
-    )
+    tk.Label(
+        marco_titulos,
+        text="Nombre",
+        font=("Arial", 12, "bold"),
+        bg="#2878E8",
+        fg="white",
+    ).grid(row=0, column=0, padx=20, pady=10, sticky="ew")
 
-    tk.Label(marco_titulos, text="Teléfono", font=("Arial", 12, "bold")).grid(
-        row=0, column=1, padx=20, pady=10, sticky="ew"
-    )
+    tk.Label(
+        marco_titulos,
+        text="Teléfono",
+        font=("Arial", 12, "bold"),
+        bg="#2878E8",
+        fg="white",
+    ).grid(row=0, column=1, padx=20, pady=10, sticky="ew")
 
-    tk.Label(marco_titulos, text="Correo", font=("Arial", 12, "bold")).grid(
-        row=0, column=2, padx=20, pady=10, sticky="ew"
-    )
+    tk.Label(
+        marco_titulos,
+        text="Correo",
+        font=("Arial", 12, "bold"),
+        bg="#2878E8",
+        fg="white",
+    ).grid(row=0, column=2, padx=20, pady=10, sticky="ew")
 
-    tk.Label(marco_titulos, text="Acción", font=("Arial", 12, "bold")).grid(
-        row=0, column=3, padx=20, pady=10, sticky="ew"
-    )
-
-    # ==========================================
-    # LÍNEA SEPARADORA
-    # ==========================================
-
-    tk.Frame(marco_titulos, height=2, bd=0, relief="solid", bg="black").grid(
-        row=1, column=0, columnspan=4, padx=10, pady=5, sticky="ew"
-    )
+    tk.Label(
+        marco_titulos,
+        text="Acción",
+        font=("Arial", 12, "bold"),
+        bg="#2878E8",
+        fg="white",
+    ).grid(row=0, column=3, padx=20, pady=10, sticky="ew")
 
 
 def mostrar_botones(contenedor, marco_contactos, fila):
     fila += 1
 
-    boton = tk.Frame(contenedor)
+    boton = tk.Frame(contenedor, bg="#F5F7FA")
 
     boton.grid(row=fila, column=0, columnspan=4, pady=20)
 
@@ -430,6 +440,7 @@ def mostrar_botones(contenedor, marco_contactos, fila):
         text="Añadir contacto",
         width=15,
         command=lambda: ventana_añadir(marco_contactos),
+        bg="#F5F7FA",
     ).pack(side="left", padx=5)
 
     tk.Button(
@@ -437,8 +448,9 @@ def mostrar_botones(contenedor, marco_contactos, fila):
         text="Eliminar contacto",
         width=15,
         command=lambda: ventana_eliminar(marco_contactos),
+        bg="#F5F7FA",
     ).pack(side="left", padx=5)
 
-    tk.Button(boton, text="Buscar contacto", width=15, command=ventana_buscar).pack(
-        side="left", padx=5
-    )
+    tk.Button(
+        boton, text="Buscar contacto", width=15, bg="#F5F7FA", command=ventana_buscar
+    ).pack(side="left", padx=5)
