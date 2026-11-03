@@ -14,6 +14,12 @@ ventana.title("Agenda de contactos")
 ventana.geometry("1000x650")
 ventana.minsize(800, 500)
 
+botones.imagen_editar = tk.PhotoImage(
+    master=ventana, file="Iconos/editar.png"
+).subsample(
+    13, 13
+)  # Ajusta el tamaño de la imagen según sea necesario
+
 # Panel principal
 contenido = tk.Frame(ventana, bg=FONDO)
 

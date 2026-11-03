@@ -4,6 +4,7 @@ from tkinter import messagebox
 from funciones import Agenda
 
 agenda = Agenda()
+imagen_editar = None
 
 
 def ventana_añadir(marco_contactos):
@@ -361,9 +362,12 @@ def mostrar_contactos(agenda, marco_contactos):
 
             boton_editar = tk.Button(
                 marco_contacto,
-                text="Editar",
-                width=10,
+                image=imagen_editar,
                 bg="#F5F7FA",
+                activebackground="#F5F7FA",
+                relief="flat",
+                borderwidth=0,
+                cursor="hand2",
                 command=lambda n=nombre, t=telefono, c=correo: ventana_editar(
                     n, t, c, marco_contactos
                 ),
