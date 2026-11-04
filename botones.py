@@ -5,6 +5,7 @@ from funciones import Agenda
 
 agenda = Agenda()
 imagen_editar = None
+imagen_eliminar = None
 
 
 def ventana_añadir(marco_contactos):
@@ -48,42 +49,20 @@ def ventana_añadir(marco_contactos):
     tk.Button(ventana_añadir, text="Guardar", command=boton_guardar).pack(pady=20)
 
 
-def ventana_eliminar(marco_contactos):
-    ventana_eliminar = tk.Toplevel()
-    ventana_eliminar.title("Eliminar contacto")
-    ventana_eliminar.geometry("400x300")
-    ventana_eliminar.resizable(
-        False, False
-    )  # Esta line sirve para aque no se pueda cambiar el tamaño de la ventana
+def eliminar_contacto(nombre, telefono, agenda, marco_contactos):
+    respuesta = messagebox.askyesno(
+        "Confirmar eliminación",
+        f"¿Estás seguro de que deseas eliminar el contacto '{nombre}'?",
+    )
 
-    tk.Label(ventana_eliminar, text="Nombre del contacto a eliminar:").pack(pady=5)
-
-    entrada_nombre = tk.Entry(ventana_eliminar)
-    entrada_nombre.pack(pady=5)
-
-    tk.Label(ventana_eliminar, text="Teléfono del contacto a eliminar:").pack(pady=5)
-
-    entrada_telefono = tk.Entry(ventana_eliminar)
-    entrada_telefono.pack(pady=5)
-
-    def boton_eliminar():
-        nombre = entrada_nombre.get()
-        telefono = entrada_telefono.get()
-
+    if respuesta:
         correcto, mensaje = agenda.eliminar_contacto(nombre, telefono)
 
         if correcto:
             messagebox.showinfo("Éxito", mensaje)
             mostrar_contactos(agenda, marco_contactos)
-            ventana_eliminar.destroy()
         else:
             messagebox.showerror("Error", mensaje)
-
-    tk.Button(ventana_eliminar, text="Eliminar", command=boton_eliminar).pack(pady=20)
-    ventana_añadir = tk.Toplevel()
-    ventana_añadir.title("Añadir contacto")
-    ventana_añadir.geometry("400x300")
-    ventana_añadir.resizable(False, False)
 
 
 def ventana_buscar():
@@ -155,21 +134,21 @@ def ventana_editar(nombre_antiguo, telefono_antiguo, correo_antiguo, marco_conta
     ventana_editar.geometry("400x300")
     ventana_editar.resizable(False, False)
 
-    tk.Label(ventana_editar, text="Nombre:").pack(pady=5)
+    tk.Label(ventana_editar, text="Nombre", anchor="center").pack(pady=5)
 
-    entrada_nombre = tk.Entry(ventana_editar)
+    entrada_nombre = tk.Entry(ventana_editar, justify="center")
     entrada_nombre.pack(pady=5)
     entrada_nombre.insert(0, nombre_antiguo)
 
-    tk.Label(ventana_editar, text="Teléfono:").pack(pady=5)
+    tk.Label(ventana_editar, text="Teléfono", anchor="center").pack(pady=5)
 
-    entrada_telefono = tk.Entry(ventana_editar)
+    entrada_telefono = tk.Entry(ventana_editar, justify="center")
     entrada_telefono.pack(pady=5)
     entrada_telefono.insert(0, telefono_antiguo)
 
-    tk.Label(ventana_editar, text="Correo:").pack(pady=5)
+    tk.Label(ventana_editar, text="Correo", anchor="center").pack(pady=5)
 
-    entrada_correo = tk.Entry(ventana_editar)
+    entrada_correo = tk.Entry(ventana_editar, justify="center")
     entrada_correo.pack(pady=5)
     entrada_correo.insert(0, correo_antiguo)
 
@@ -357,27 +336,40 @@ def mostrar_contactos(agenda, marco_contactos):
             )
 
             # ------------------------------------------
-            # Boton de Editar
+            # Frame de botones (Editar y Eliminar)
             # ------------------------------------------
 
+            marco_botones = tk.Frame(marco_contacto, bg="#F5F7FA")
+            marco_botones.grid(row=0, column=3, padx=5)
+
             boton_editar = tk.Button(
-                marco_contacto,
+                marco_botones,
                 image=imagen_editar,
+                relief="flat",
+                borderwidth=0,
+                cursor="hand2",
+                command=lambda: ventana_editar(
+                    nombre, telefono, correo, marco_contactos
+                ),
+            )
+            boton_editar.pack(side="left", padx=5)
+
+            boton_eliminar = tk.Button(
+                marco_botones,
+                image=imagen_eliminar,
                 bg="#F5F7FA",
                 activebackground="#F5F7FA",
                 relief="flat",
                 borderwidth=0,
                 cursor="hand2",
-                command=lambda n=nombre, t=telefono, c=correo: ventana_editar(
-                    n, t, c, marco_contactos
+                command=lambda n=nombre, t=telefono: eliminar_contacto(
+                    n, t, agenda, marco_contactos
                 ),
             )
-
-            boton_editar.grid(row=0, column=3)
-
-        # ==========================================
-        # BOTONES DE ACCIÓN (fuera del for, una sola vez)
-        # ==========================================
+            boton_eliminar.pack(side="left", padx=5)
+            # ==========================================
+            # BOTONES DE ACCIÓN (fuera del for, una sola vez)
+            # ==========================================
 
         mostrar_botones(contenido, mostrar_contactos, fila)
 
@@ -444,14 +436,6 @@ def mostrar_botones(contenedor, marco_contactos, fila):
         text="Añadir contacto",
         width=15,
         command=lambda: ventana_añadir(marco_contactos),
-        bg="#F5F7FA",
-    ).pack(side="left", padx=5)
-
-    tk.Button(
-        boton,
-        text="Eliminar contacto",
-        width=15,
-        command=lambda: ventana_eliminar(marco_contactos),
         bg="#F5F7FA",
     ).pack(side="left", padx=5)
 

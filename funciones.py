@@ -22,7 +22,7 @@ class Agenda:
             return False, "Todos los campos son obligatorios."
 
         elif not telefono.isdigit() or len(telefono) != 9:
-            return False, "El teléfono debe contener 9 dígitos numericos."
+            return False, "El teléfono debe contener 9 dígitos numéricos."
 
         elif "@" not in correo or "." not in correo:
             return False, "El correo no es válido."
@@ -30,10 +30,15 @@ class Agenda:
         else:
             with open(self.contactos, "r", encoding="utf-8") as archivo:
                 contactos = archivo.readlines()
+
                 for contacto in contactos:
-                    nombre_existente, telefono_existente, correo_existente = (
-                        contacto.strip().split(",")
-                    )
+                    datos = contacto.strip().split(",")
+
+                    if len(datos) != 3:
+                        print("Contacto con formato incorrecto:", repr(contacto))
+                        continue
+
+                    nombre_existente, telefono_existente, correo_existente = datos
 
                     if (
                         nombre_existente == nombre

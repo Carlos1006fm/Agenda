@@ -17,7 +17,13 @@ ventana.minsize(800, 500)
 botones.imagen_editar = tk.PhotoImage(
     master=ventana, file="Iconos/editar.png"
 ).subsample(
-    13, 13
+    15, 15
+)  # Ajusta el tamaño de la imagen según sea necesario
+
+botones.imagen_eliminar = tk.PhotoImage(
+    master=ventana, file="Iconos/basura.png"
+).subsample(
+    18, 18
 )  # Ajusta el tamaño de la imagen según sea necesario
 
 # Panel principal
