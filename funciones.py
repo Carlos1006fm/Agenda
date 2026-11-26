@@ -15,6 +15,7 @@ class Agenda:
     def __init__(self):
         self.contactos = self.ruta_txt
 
+    # Funcion para añadir el contacto a la agenda
     def añadir_contacto(self, nombre, telefono, correo):
         existe_nombre = False
 
@@ -56,6 +57,7 @@ class Agenda:
 
             return True, "Contacto añadido exitosamente."
 
+    # Funcion para eliminar el contacto de la agenda
     def eliminar_contacto(self, nombre_eliminar, telefono_eliminar):
         lista_contactos = []
         try:
@@ -78,6 +80,7 @@ class Agenda:
         except FileNotFoundError:
             messagebox.showerror("Error", "No se encontró el archivo de contactos.")
 
+    # Funcion para buscar un contacto en la agenda
     def buscar_contacto(self, nombre_buscar):
         try:
             with open(self.contactos, "r") as archivo:
@@ -91,6 +94,7 @@ class Agenda:
         except FileNotFoundError:
             return "No se encontró el archivo de contactos."
 
+    # Funcion para editar un contacto en la agenda
     def editar_contacto(
         self,
         nombre_antiguo,
@@ -136,3 +140,69 @@ class Agenda:
                 archivo.writelines(contactos)
 
             return True, "Contacto sea editado de forma correcta."
+
+        # Funcion para añadir un contacto a favoritos
+
+        try:
+            with open("favoritos.txt", "r") as archivo:
+                favoritos = archivo.readlines()
+
+            for favorito in favoritos:
+                nombre_existente, telefono_existente, correo_existente = (
+                    favorito.strip().split(",")
+                )
+                if nombre_existente == nombre and telefono_existente == telefono:
+                    return False, "El contacto ya está en favoritos."
+
+            with open("favoritos.txt", "a") as archivo:
+                archivo.write(f"{nombre},{telefono},{correo}\n")
+
+            return True, "Contacto añadido a favoritos."
+        except FileNotFoundError:
+            with open("favoritos.txt", "w") as archivo:
+                archivo.write(f"{nombre},{telefono},{correo}\n")
+            return True, "Contacto añadido a favoritos."
+
+    # Comprobar si un contacto es favorito
+    def es_favorito(self, nombre, telefono, correo):
+        try:
+            with open("favoritos.txt", "r", encoding="utf-8") as archivo:
+                for linea in archivo:
+                    datos = linea.strip().split(",")
+
+                    if len(datos) == 3:
+                        if (
+                            datos[0] == nombre
+                            and datos[1] == telefono
+                            and datos[2] == correo
+                        ):
+                            return True
+
+        except FileNotFoundError:
+            return False
+
+        return False
+
+    # Funcion para cambiar el estado de favorito de un contacto
+    def cambiar_favorito(self, nombre, telefono, correo):
+        favoritos = []
+
+        try:
+            with open("favoritos.txt", "r", encoding="utf-8") as archivo:
+                favoritos = archivo.readlines()
+        except FileNotFoundError:
+            pass
+
+        contacto = f"{nombre},{telefono},{correo}\n"
+
+        if contacto in favoritos:
+            favoritos.remove(contacto)
+            es_favorito = False
+        else:
+            favoritos.append(contacto)
+            es_favorito = True
+
+        with open("favoritos.txt", "w", encoding="utf-8") as archivo:
+            archivo.writelines(favoritos)
+
+        return es_favorito

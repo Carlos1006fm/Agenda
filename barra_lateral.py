@@ -65,9 +65,6 @@ class BarraLateral:
 
         self.boton_favoritos.pack(fill="x", padx=10, pady=5)
 
-        self.crear_boton("  ◆  Etiquetas")
-        self.crear_boton("  ⚙  Configuración")
-
     def crear_boton(self, texto):
 
         tk.Button(

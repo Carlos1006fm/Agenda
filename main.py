@@ -1,6 +1,6 @@
 import tkinter as tk
 from funciones import Agenda
-import botones
+import interfaz
 import barra_lateral
 
 agenda = Agenda()
@@ -14,13 +14,13 @@ ventana.title("Agenda de contactos")
 ventana.geometry("1000x650")
 ventana.minsize(800, 500)
 
-botones.imagen_editar = tk.PhotoImage(
+interfaz.imagen_editar = tk.PhotoImage(
     master=ventana, file="Iconos/editar.png"
 ).subsample(
     15, 15
 )  # Ajusta el tamaño de la imagen según sea necesario
 
-botones.imagen_eliminar = tk.PhotoImage(
+interfaz.imagen_eliminar = tk.PhotoImage(
     master=ventana, file="Iconos/basura.png"
 ).subsample(
     18, 18
@@ -39,18 +39,25 @@ titulo = tk.Label(
 )
 titulo.pack(pady=20)
 
+# Marco para los botones
+marco_botones = tk.Frame(contenido, bg=FONDO)
+marco_botones.pack(pady=10)
+
 # Zona donde se muestran los contactos
 marco_contactos = tk.Frame(contenido, bg=FONDO)
 marco_contactos.pack(pady=20, fill="both", expand=True)
 
+# Mostrar botones
+interfaz.mostrar_botones(marco_botones, marco_contactos)
+
 
 # Funciones de navegación
 def ir_contactos():
-    botones.mostrar_contactos(agenda, marco_contactos)
+    interfaz.mostrar_contactos(agenda, marco_contactos)
 
 
 def ir_favoritos():
-    botones.mostrar_favoritos(agenda, marco_contactos)
+    interfaz.mostrar_favoritos(agenda, marco_contactos)
 
 
 # Creacion de la barra lateral
